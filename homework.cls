@@ -1,3 +1,5 @@
+% vim: set ft=tex:
+
 \NeedsTeXFormat{LaTeX2e}
 \LoadClassWithOptions{article}
 \ProvidesClass{homework}[2014/12/16 Class file for homework assignments]
@@ -37,6 +39,12 @@
 \RequirePackage{wrapfig}
 \RequirePackage{fancyvrb}
 \RequirePackage{listings}
+
+% Nice tables
+\RequirePackage{booktabs}
+
+% Plots
+\RequirePackage{pgfplots}
 
 % Conditionals
 \RequirePackage{ifthen}
@@ -102,9 +110,22 @@
   \end{minipage}
 }
 
-% Override normal section defintions
+% Override normal section defintion
 \renewcommand{\section}[0]{\question}
-\WithSuffix\newcommand\section*[1]{\question*{#1}}
+
+% Unnumbered section, takes one argument
+\WithSuffix\newcommand\section*[1]{%
+  % Emit \newpage if option `newpage` is present
+  \ifthenelse{\equal{\@opnewpage}{1}}{%
+    \newpage%
+  }{}%
+  % Wrap in minipage so that we don't get a line break enywhere in between
+  \begin{minipage}{\linewidth}%
+    \vspace{.2in}%
+    \noindent{\bf #1}%
+    \vspace{0.3em} \hrule \vspace{.1in}%
+  \end{minipage}
+}
 
 % ----- Question Parts --------------------------------------------------------
 
@@ -154,7 +175,7 @@
     % Setup header
     \setlength{\headheight}{15.2pt}
     \setlength{\headsep}{0.2in}
-    \lhead{\hwclass{} \hwlecture\hwsection}%
+    \lhead{\hwclass{} \hwsection}%
     \chead{\hwname{} (\hwemail)}%
     \rhead{\hwtype{} \hwnum}%
 
@@ -168,7 +189,7 @@
     \begin{center}
       {\Large \hwclass{} \hwtype{} \hwnum}
 
-      \hwname{} (\hwemail)
+      \hwname{} | \hwsection{}
 
       \today
     \end{center}
